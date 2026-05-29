@@ -14,11 +14,18 @@ def _call_gemini(system_prompt: str, message: str, history: list[dict]) -> str:
     try:
         import google.generativeai as genai
         genai.configure(api_key=settings.gemini_api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash", system_instruction=system_prompt)
+
+        model = genai.GenerativeModel(
+            "gemini-2.5-flash",
+            system_instruction=system_prompt
+        )
+
         chat_history = [
             {"role": h["role"], "parts": [h["content"]]}
-            for h in history if h.get("role") in ("user", "model")
+            for h in history
+            if h.get("role") in ("user", "model")
         ]
+
         chat = model.start_chat(history=chat_history)
         return chat.send_message(message).text
     except Exception as e:
