@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useAuth } from '@/context/AuthContext'
 import { groupsApi, expensesApi, balancesApi, activityApi } from '@/api/client'
 import Layout from '@/components/Layout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,8 +12,6 @@ import { ArrowLeft, Receipt, Handshake, Users, Plus } from 'lucide-react'
 import AddExpenseModal from '@/components/AddExpenseModal'
 import AddMemberModal from '@/components/AddMemberModal'
 import SettleUpModal from '@/components/SettleUpModal'
-import { useAuth } from '@/context/AuthContext'
-import AIChat from '@/components/AIChat'
 
 export default function GroupDetail() {
     const { id } = useParams()
@@ -24,6 +23,7 @@ export default function GroupDetail() {
     const [activity, setActivity] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
+
     const [showAddExpense, setShowAddExpense] = useState(false)
     const [showAddMember, setShowAddMember] = useState(false)
     const [showSettleUp, setShowSettleUp] = useState(false)
@@ -74,10 +74,10 @@ export default function GroupDetail() {
         return (
             <Layout>
                 <div className="max-w-5xl mx-auto px-6 py-8 space-y-4">
-                    <div className="h-8 w-40 rounded bg-muted animate-pulse" />
+                    <div className="h-8 w-40 rounded-xl bg-card border border-white/10 animate-pulse" />
                     <div className="grid gap-6 lg:grid-cols-3">
-                        <div className="lg:col-span-2 h-80 rounded-lg bg-muted animate-pulse" />
-                        <div className="h-80 rounded-lg bg-muted animate-pulse" />
+                        <div className="lg:col-span-2 h-80 rounded-xl bg-card border border-white/10 animate-pulse" />
+                        <div className="h-80 rounded-xl bg-card border border-white/10 animate-pulse" />
                     </div>
                 </div>
             </Layout>
@@ -88,11 +88,15 @@ export default function GroupDetail() {
         return (
             <Layout>
                 <div className="max-w-3xl mx-auto px-6 py-8">
-                    <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+                    <Link
+                        to="/dashboard"
+                        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
+                    >
                         <ArrowLeft size={16} />
                         Back to dashboard
                     </Link>
-                    <Card>
+
+                    <Card className="rounded-xl border border-white/10 bg-card">
                         <CardContent className="p-6">
                             <p className="text-sm text-destructive">{error}</p>
                         </CardContent>
@@ -104,34 +108,51 @@ export default function GroupDetail() {
 
     return (
         <Layout>
-            <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
+            <div className="max-w-5xl mx-auto px-6 py-8 space-y-8 text-foreground">
                 <div>
-                    <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+                    <Link
+                        to="/dashboard"
+                        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4"
+                    >
                         <ArrowLeft size={16} />
                         Back to dashboard
                     </Link>
 
                     <div className="flex items-start justify-between gap-4">
                         <div>
-                            <h1 className="text-2xl font-semibold">{group?.name}</h1>
+                            <h1 className="text-2xl font-semibold tracking-tight">{group?.name}</h1>
                             {group?.description && (
                                 <p className="text-sm text-muted-foreground mt-1">{group.description}</p>
                             )}
                         </div>
 
-                        <div className="flex items-center gap-2">
-                            <Badge variant="secondary">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <Badge className="bg-white/5 text-foreground border border-white/10 hover:bg-white/5">
                                 {group?.members?.filter((m) => m.is_active).length || 0} members
                             </Badge>
-                            <Button variant="outline" onClick={() => setShowAddMember(true)}>
+
+                            <Button
+                                variant="outline"
+                                onClick={() => setShowAddMember(true)}
+                                className="rounded-xl border-white/10 bg-card hover:bg-white/5"
+                            >
                                 Add member
                             </Button>
-                            <Button onClick={() => setShowAddExpense(true)} className="gap-2">
+
+                            <Button
+                                variant="outline"
+                                onClick={() => setShowSettleUp(true)}
+                                className="rounded-xl border-white/10 bg-card hover:bg-white/5"
+                            >
+                                Settle up
+                            </Button>
+
+                            <Button
+                                onClick={() => setShowAddExpense(true)}
+                                className="gap-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
+                            >
                                 <Plus size={16} />
                                 Add expense
-                            </Button>
-                            <Button variant="outline" onClick={() => setShowSettleUp(true)}>
-                                Settle up
                             </Button>
                         </div>
                     </div>
@@ -139,9 +160,9 @@ export default function GroupDetail() {
 
                 <div className="grid gap-6 lg:grid-cols-3">
                     <div className="lg:col-span-2 space-y-6">
-                        <Card>
+                        <Card className="rounded-xl border border-white/10 bg-card">
                             <CardHeader>
-                                <CardTitle>Expenses</CardTitle>
+                                <CardTitle className="text-foreground">Expenses</CardTitle>
                             </CardHeader>
                             <CardContent className="p-0">
                                 {expenses.length === 0 ? (
@@ -152,30 +173,93 @@ export default function GroupDetail() {
                                     expenses.map((expense, index) => (
                                         <div key={expense.id}>
                                             <div className="px-6 py-4 flex items-start justify-between gap-4">
-                                                <div className="min-w-0">
+                                                <div className="min-w-0 flex-1">
                                                     <div className="flex items-center gap-2 flex-wrap">
-                                                        <p className="font-medium truncate">{expense.title}</p>
-                                                        {expense.is_shared_asset && <Badge>Shared Asset</Badge>}
+                                                        <p className="font-medium truncate text-foreground">{expense.title}</p>
+                                                        {expense.is_shared_asset && (
+                                                            <Badge className="bg-primary/12 text-primary border border-primary/20 hover:bg-primary/12">
+                                                                Shared Asset
+                                                            </Badge>
+                                                        )}
                                                     </div>
+
                                                     <p className="text-xs text-muted-foreground mt-1">
                                                         {expense.category} · {formatDate(expense.created_at)}
                                                     </p>
+
+                                                    {expense.is_shared_asset && expense.shared_asset && (
+                                                        <p className="text-sm text-foreground mt-2">
+                                                            <span className="font-medium">Asset:</span>{' '}
+                                                            {expense.shared_asset.asset_name}
+                                                        </p>
+                                                    )}
+
                                                     {expense.notes && (
                                                         <p className="text-sm text-muted-foreground mt-2">{expense.notes}</p>
                                                     )}
+
                                                     {expense.is_shared_asset && expense.shared_asset && (
-                                                        <div className="mt-3 rounded-md bg-muted p-3 text-xs text-muted-foreground space-y-1">
-                                                            <p><span className="font-medium text-foreground">Asset:</span> {expense.shared_asset.asset_name}</p>
-                                                            <p><span className="font-medium text-foreground">Total cost:</span> {formatCurrency(expense.shared_asset.total_cost)}</p>
-                                                            <p><span className="font-medium text-foreground">Projected resale:</span> {formatCurrency(expense.shared_asset.expected_resale_value)}</p>
-                                                            <p><span className="font-medium text-foreground">Estimated per person:</span> {formatCurrency(expense.shared_asset.per_person_estimate)}</p>
+                                                        <div className="mt-3 rounded-xl border border-primary/20 bg-primary/10 p-4">
+                                                            <p className="text-sm font-medium mb-3 text-foreground">
+                                                                Ownership summary
+                                                            </p>
+
+                                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                                                                <div className="flex justify-between gap-3">
+                                                                    <span className="text-muted-foreground">Purchase cost</span>
+                                                                    <span className="text-foreground">
+                                                                        {formatCurrency(expense.shared_asset.purchase_cost)}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="flex justify-between gap-3">
+                                                                    <span className="text-muted-foreground">Delivery fee</span>
+                                                                    <span className="text-foreground">
+                                                                        {formatCurrency(expense.shared_asset.delivery_fee)}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="flex justify-between gap-3">
+                                                                    <span className="text-muted-foreground">Setup fee</span>
+                                                                    <span className="text-foreground">
+                                                                        {formatCurrency(expense.shared_asset.setup_fee)}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="flex justify-between gap-3">
+                                                                    <span className="text-muted-foreground">Expected resale</span>
+                                                                    <span className="text-foreground">
+                                                                        {formatCurrency(expense.shared_asset.expected_resale_value)}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="flex justify-between gap-3 sm:col-span-2">
+                                                                    <span className="text-muted-foreground">
+                                                                        Projected net ownership cost
+                                                                    </span>
+                                                                    <span className="font-medium text-foreground">
+                                                                        {formatCurrency(expense.shared_asset.net_ownership_cost)}
+                                                                    </span>
+                                                                </div>
+
+                                                                <div className="flex justify-between gap-3 sm:col-span-2">
+                                                                    <span className="text-muted-foreground">
+                                                                        Per-person ownership estimate
+                                                                    </span>
+                                                                    <span className="font-medium text-foreground">
+                                                                        {formatCurrency(expense.shared_asset.per_person_estimate)}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="text-sm font-medium shrink-0">
+
+                                                <div className="text-sm font-medium shrink-0 text-foreground">
                                                     {formatCurrency(expense.amount)}
                                                 </div>
                                             </div>
+
                                             {index < expenses.length - 1 && <Separator />}
                                         </div>
                                     ))
@@ -183,38 +267,39 @@ export default function GroupDetail() {
                             </CardContent>
                         </Card>
 
-                        <Card>
+                        <Card className="rounded-xl border border-white/10 bg-card">
                             <CardHeader>
-                                <CardTitle>Recent activity</CardTitle>
+                                <CardTitle className="text-foreground">Recent activity</CardTitle>
                             </CardHeader>
                             <CardContent className="p-0">
                                 {activity.length === 0 ? (
-                                    <div className="p-6 text-sm text-muted-foreground">
-                                        No activity yet.
-                                    </div>
+                                    <div className="p-6 text-sm text-muted-foreground">No activity yet.</div>
                                 ) : (
                                     activity.map((item, index) => (
                                         <div key={`${item.type}-${item.id}`}>
                                             <div className="flex items-center gap-4 px-6 py-4">
-                                                <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shrink-0">
+                                                <div className="w-8 h-8 rounded-full bg-primary/12 border border-primary/20 flex items-center justify-center shrink-0">
                                                     {item.type === 'expense' ? (
-                                                        <Receipt size={14} className="text-accent-foreground" />
+                                                        <Receipt size={14} className="text-primary" />
                                                     ) : (
-                                                        <Handshake size={14} className="text-accent-foreground" />
+                                                        <Handshake size={14} className="text-primary" />
                                                     )}
                                                 </div>
 
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium">{item.description}</p>
+                                                    <p className="text-sm font-medium text-foreground">
+                                                        {item.description}
+                                                    </p>
                                                     <p className="text-xs text-muted-foreground">
                                                         {formatDate(item.created_at)}
                                                     </p>
                                                 </div>
 
-                                                <div className="text-sm font-medium shrink-0">
+                                                <div className="text-sm font-medium shrink-0 text-foreground">
                                                     {formatCurrency(item.amount)}
                                                 </div>
                                             </div>
+
                                             {index < activity.length - 1 && <Separator />}
                                         </div>
                                     ))
@@ -224,19 +309,22 @@ export default function GroupDetail() {
                     </div>
 
                     <div className="space-y-6">
-                        <Card>
+                        <Card className="rounded-xl border border-white/10 bg-card">
                             <CardHeader>
-                                <CardTitle>Members</CardTitle>
+                                <CardTitle className="text-foreground">Members</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 {group?.members?.length ? (
                                     group.members
                                         .filter((member) => member.is_active)
                                         .map((member) => (
-                                            <div key={member.user_id} className="flex items-center justify-between text-sm">
+                                            <div
+                                                key={member.user_id}
+                                                className="flex items-center justify-between text-sm"
+                                            >
                                                 <div className="flex items-center gap-2">
                                                     <Users size={14} className="text-muted-foreground" />
-                                                    <span>{member.name}</span>
+                                                    <span className="text-foreground">{member.name}</span>
                                                 </div>
                                                 <span className="text-muted-foreground">{member.email}</span>
                                             </div>
@@ -247,21 +335,24 @@ export default function GroupDetail() {
                             </CardContent>
                         </Card>
 
-                        <Card>
+                        <Card className="rounded-xl border border-white/10 bg-card">
                             <CardHeader>
-                                <CardTitle>Net balances</CardTitle>
+                                <CardTitle className="text-foreground">Net balances</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 {balances.net_balances?.length ? (
                                     balances.net_balances.map((item) => (
-                                        <div key={item.user_id} className="flex items-center justify-between text-sm">
-                                            <span>{item.name}</span>
+                                        <div
+                                            key={item.user_id}
+                                            className="flex items-center justify-between text-sm"
+                                        >
+                                            <span className="text-foreground">{item.name}</span>
                                             <span
                                                 className={
                                                     item.net > 0
-                                                        ? 'text-green-600 font-medium'
+                                                        ? 'text-primary font-medium'
                                                         : item.net < 0
-                                                            ? 'text-red-600 font-medium'
+                                                            ? 'text-red-400 font-medium'
                                                             : 'text-muted-foreground'
                                                 }
                                             >
@@ -276,19 +367,19 @@ export default function GroupDetail() {
                             </CardContent>
                         </Card>
 
-                        <Card>
+                        <Card className="rounded-xl border border-white/10 bg-card">
                             <CardHeader>
-                                <CardTitle>Pairwise balances</CardTitle>
+                                <CardTitle className="text-foreground">Pairwise balances</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-3">
                                 {balances.pairwise?.length ? (
                                     balances.pairwise.map((item, index) => (
                                         <div key={index} className="text-sm">
-                                            <span className="font-medium">{item.from_name}</span>
+                                            <span className="font-medium text-foreground">{item.from_name}</span>
                                             <span className="text-muted-foreground"> owes </span>
-                                            <span className="font-medium">{item.to_name}</span>
+                                            <span className="font-medium text-foreground">{item.to_name}</span>
                                             <span className="text-muted-foreground"> · </span>
-                                            <span>{formatCurrency(item.amount)}</span>
+                                            <span className="text-foreground">{formatCurrency(item.amount)}</span>
                                         </div>
                                     ))
                                 ) : (
@@ -316,17 +407,16 @@ export default function GroupDetail() {
                     onAdded={handleMemberAdded}
                 />
             )}
+
             {showSettleUp && (
                 <SettleUpModal
                     groupId={id}
                     members={group?.members || []}
-                    currentUse
-                    rId={user?.id}
+                    currentUserId={user?.id}
                     onClose={() => setShowSettleUp(false)}
                     onSettled={handleSettled}
                 />
             )}
-            <AIChat groupId={id} />
         </Layout>
     )
 }

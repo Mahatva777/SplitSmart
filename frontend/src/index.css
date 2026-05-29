@@ -1,29 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222 14% 12%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 14% 12%;
-    --primary: 183 99% 22%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --card: 0 0% 4.3%;
+    --card-foreground: 0 0% 100%;
+
+    --primary: 175 100% 35%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 16% 96%;
-    --secondary-foreground: 222 14% 12%;
-    --muted: 210 16% 96%;
-    --muted-foreground: 215 14% 48%;
-    --accent: 183 30% 94%;
-    --accent-foreground: 183 99% 18%;
+
+    --secondary: 205 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 6%;
+    --muted-foreground: 0 0% 64%;
+
+    --accent: 175 100% 35%;
+    --accent-foreground: 0 0% 100%;
+
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
-    --border: 214 16% 90%;
-    --input: 214 16% 90%;
-    --ring: 183 99% 22%;
-    --radius: 0.5rem;
+
+    --border: 0 0% 100% / 0.08;
+    --input: 0 0% 100% / 0.08;
+    --ring: 175 100% 35%;
+
+    --radius: 0.75rem;
   }
 
-  * { @apply border-border; }
-  body { @apply bg-background text-foreground antialiased; }
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+  }
 }
