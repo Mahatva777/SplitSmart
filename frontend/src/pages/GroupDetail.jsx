@@ -10,9 +10,12 @@ import { formatCurrency, formatDate } from '@/lib/utils'
 import { ArrowLeft, Receipt, Handshake, Users, Plus } from 'lucide-react'
 import AddExpenseModal from '@/components/AddExpenseModal'
 import AddMemberModal from '@/components/AddMemberModal'
+import SettleUpModal from '@/components/SettleUpModal'
+import { useAuth } from '@/context/AuthContext'
 
 export default function GroupDetail() {
     const { id } = useParams()
+    const { user } = useAuth()
 
     const [group, setGroup] = useState(null)
     const [expenses, setExpenses] = useState([])
@@ -22,6 +25,7 @@ export default function GroupDetail() {
     const [error, setError] = useState('')
     const [showAddExpense, setShowAddExpense] = useState(false)
     const [showAddMember, setShowAddMember] = useState(false)
+    const [showSettleUp, setShowSettleUp] = useState(false)
 
     function loadGroupData() {
         if (!id) return Promise.resolve()
@@ -57,6 +61,11 @@ export default function GroupDetail() {
 
     function handleMemberAdded() {
         setShowAddMember(false)
+        loadGroupData()
+    }
+
+    function handleSettled() {
+        setShowSettleUp(false)
         loadGroupData()
     }
 
@@ -119,6 +128,9 @@ export default function GroupDetail() {
                             <Button onClick={() => setShowAddExpense(true)} className="gap-2">
                                 <Plus size={16} />
                                 Add expense
+                            </Button>
+                            <Button variant="outline" onClick={() => setShowSettleUp(true)}>
+                                Settle up
                             </Button>
                         </div>
                     </div>
@@ -301,6 +313,16 @@ export default function GroupDetail() {
                     groupId={id}
                     onClose={() => setShowAddMember(false)}
                     onAdded={handleMemberAdded}
+                />
+            )}
+            {showSettleUp && (
+                <SettleUpModal
+                    groupId={id}
+                    members={group?.members || []}
+                    currentUse
+                    rId={user?.id}
+                    onClose={() => setShowSettleUp(false)}
+                    onSettled={handleSettled}
                 />
             )}
         </Layout>
