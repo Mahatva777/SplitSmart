@@ -12,6 +12,37 @@ SplitSmart is a simplified Splitwise-inspired shared expense tracking applicatio
 
 ---
 
+## Demo Accounts
+
+For quick evaluation, the deployed application includes a few pre-seeded demo accounts with existing groups, expenses, settlements, and AI insights data.
+
+**Accounts**
+
+| Email                                                   | Password |
+| ------------------------------------------------------- | -------- |
+| [mahatva@splitsmart.com](mailto:mahatva@splitsmart.com) | 123456   |
+| [user2@ss.com](mailto:user2@ss.com)                     | 123456   |
+| [user3@ss.com](mailto:user3@ss.com)                     | 123456   |
+| [user4@ss.com](mailto:user4@ss.com)                     | 123456   |
+
+### Suggested Demo Flow
+
+1. Login using any of the accounts above.
+2. Open an existing group to view:
+
+   * expenses
+   * balances
+   * settlements
+   * activity feed
+   * AI insights
+3. Try creating a new expense or settlement.
+4. Interact with the floating AI assistant.
+5. Explore the Shared Asset workflow.
+
+These accounts exist solely for evaluator convenience and contain non-sensitive demonstration data.
+
+---
+
 ## Features
 
 Only implemented features are listed below:
