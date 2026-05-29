@@ -14,7 +14,7 @@ SplitSmart is a simplified Splitwise-inspired shared expense tracking applicatio
 
 ## Demo Accounts
 
-For quick evaluation, the deployed application includes a few pre-seeded demo accounts with existing groups, expenses, settlements, and AI insights data.
+For quick evaluation, the deployed application includes a few pre-seeded demo accounts with existing groups, expenses, settlements, and AI insights.
 
 **Accounts**
 
@@ -27,7 +27,7 @@ For quick evaluation, the deployed application includes a few pre-seeded demo ac
 
 ### Suggested Demo Flow
 
-1. Login using any of the accounts above.
+1. Login using any of the accounts above (You may signup/ create a new account from scratch and test it, you can add these demo accounts as members of groups.
 2. Open an existing group to view:
 
    * expenses
