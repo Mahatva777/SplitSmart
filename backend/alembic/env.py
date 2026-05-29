@@ -9,7 +9,13 @@ load_dotenv()
 config = context.config
 
 # Override sqlalchemy.url from environment at runtime
-config.set_main_option("sqlalchemy.url", os.environ.get("DATABASE_URL", ""))
+db_url = os.environ.get("DATABASE_URL", "")
+db_url = db_url.replace("postgres://", "postgresql://")
+
+config.set_main_option(
+    "sqlalchemy.url",
+    db_url
+)
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
