@@ -6,7 +6,10 @@ app = FastAPI(title="SplitSmart API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten to Vercel URL before production deploy
+    allow_origins=[
+        "http://localhost:5173",
+        "https://splitsmart.up.railway.app",
+    ],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
