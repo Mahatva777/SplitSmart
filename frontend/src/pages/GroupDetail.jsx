@@ -12,6 +12,7 @@ import AddExpenseModal from '@/components/AddExpenseModal'
 import AddMemberModal from '@/components/AddMemberModal'
 import SettleUpModal from '@/components/SettleUpModal'
 import { useAuth } from '@/context/AuthContext'
+import AIChat from '@/components/AIChat'
 
 export default function GroupDetail() {
     const { id } = useParams()
@@ -325,6 +326,7 @@ export default function GroupDetail() {
                     onSettled={handleSettled}
                 />
             )}
+            <AIChat groupId={id} />
         </Layout>
     )
 }
