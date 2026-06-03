@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { Bot, Send, Minus } from 'lucide-react'
+import { useParams } from 'react-router-dom'
 import { aiApi } from '@/api/client'
 import { Button } from '@/components/ui/button'
 
 export default function FloatingAIChat() {
+    const { id: groupId } = useParams()
     const [minimized, setMinimized] = useState(false)
     const [input, setInput] = useState('')
     const [messages, setMessages] = useState([])
@@ -39,10 +41,15 @@ export default function FloatingAIChat() {
         scrollToBottom()
 
         try {
-            const res = await aiApi.globalChat({
-                message: text,
-                conversation_history: conversationHistory,
-            })
+            const res = groupId
+                ? await aiApi.groupChat(groupId, {
+                    message: text,
+                    conversation_history: conversationHistory,
+                })
+                : await aiApi.globalChat({
+                    message: text,
+                    conversation_history: conversationHistory,
+                })
 
             setMessages((prev) => [
                 ...prev,
@@ -76,6 +83,10 @@ export default function FloatingAIChat() {
             y: e.clientY - position.y,
         }
     }
+
+    useEffect(() => {
+        setMessages([])
+    }, [groupId])
 
     useEffect(() => {
         function handleMouseMove(e) {
